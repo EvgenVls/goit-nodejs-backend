@@ -1,2 +1,3 @@
-const message = "Hello world!";
-console.log(message);
+import startServer from './server.js';
+
+startServer();

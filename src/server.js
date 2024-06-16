@@ -4,7 +4,9 @@ import cors from 'cors';
 
 import { env } from './utils/env.js';
 
-import movies from './db/movies.js';
+import { getAllStudents, getStudentById } from './services/students.js';
+
+// import movies from './db/movies.js';
 
 const port = Number(env('PORT', '3000'));
 
@@ -22,8 +24,32 @@ const startServer = () => {
   app.use(cors());
   app.use(express.json());
 
-  app.get('/api/movies', (req, res) => {
-    res.json(movies);
+  // app.get('/api/movies', (req, res) => {
+  //   res.json(movies);
+  // });
+
+  app.get('/students', async (req, res) => {
+    const students = await getAllStudents();
+
+    res.status(200).json({
+      data: students,
+    });
+  });
+
+  app.get('/students/:studentId', async (req, res) => {
+    const { studentId } = req.params;
+    const student = getStudentById(studentId);
+
+    if (!student) {
+      res.status(404).json({
+        message: 'Student not found',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      datu: student,
+    });
   });
 
   app.use('*', (req, res, next) => {

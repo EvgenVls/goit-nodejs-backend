@@ -48,7 +48,7 @@ const startServer = () => {
     }
 
     res.status(200).json({
-      datu: student,
+      data: student,
     });
   });
 

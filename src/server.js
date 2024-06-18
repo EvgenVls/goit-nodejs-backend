@@ -37,19 +37,28 @@ const startServer = () => {
   });
 
   app.get('/students/:studentId', async (req, res) => {
-    const { studentId } = req.params;
-    const student = getStudentById(studentId);
+    try {
+      const { studentId } = req.params;
+      const student = await getStudentById(studentId);
 
-    if (!student) {
-      res.status(404).json({
-        message: 'Student not found',
+      if (!student) {
+        return res.status(404).json({
+          message: 'Student not found',
+        });
+      }
+
+      res.status(200).json({
+        data: student,
       });
-      return;
+    } catch (error) {
+      if (error.message.includes('Cast to ObjectId failed')) {
+        error.status = 404;
+      }
+      const { status = 500 } = error;
+      res.status(status).json({
+        message: error.message,
+      });
     }
-
-    res.status(200).json({
-      data: student,
-    });
   });
 
   app.use('*', (req, res, next) => {

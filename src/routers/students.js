@@ -4,7 +4,8 @@ import {
   getStudentByIdController,
   createStudentController,
   deleteStudentController,
-  upsertStudentController
+  upsertStudentController,
+  patchStudentController,
 } from '../controllers/students.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import isValidId from '../middlewares/isValidId.js';
@@ -27,6 +28,16 @@ studentsRouter.delete(
   ctrlWrapper(deleteStudentController),
 );
 
-studentsRouter.put('/:studentId', isValidId, ctrlWrapper(upsertStudentController))l
+studentsRouter.put(
+  '/:studentId',
+  isValidId,
+  ctrlWrapper(upsertStudentController),
+);
+
+studentsRouter.patch(
+  '/:studentId',
+  isValidId,
+  ctrlWrapper(patchStudentController),
+);
 
 export default studentsRouter;

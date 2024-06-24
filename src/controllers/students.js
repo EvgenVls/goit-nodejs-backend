@@ -53,15 +53,17 @@ export const deleteStudentController = async (req, res, next) => {
     return;
   }
 
-  res.status(204).json({
-    status: 204,
+  res.json({
+    status: 200,
     message: `Student with id ${studentId} deleted success!`,
     data: student,
   });
+
+  // res.status(204).send();
 };
 
 export const upsertStudentController = async (req, res, next) => {
-  const studentId = req.params;
+  const { studentId } = req.params;
   const result = await updateStudent(studentId, req.body, { upsert: true });
 
   if (!result) {
@@ -74,6 +76,22 @@ export const upsertStudentController = async (req, res, next) => {
   res.status(status).json({
     status,
     message: 'Successfully upserted a student!',
+    data: result.student,
+  });
+};
+
+export const patchStudentController = async (req, res, next) => {
+  const { studentId } = req.params;
+  const result = await updateStudent(studentId, req.body);
+
+  if (!result) {
+    next(createHttpError(404, 'Student not found'));
+    return;
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a student!',
     data: result.student,
   });
 };

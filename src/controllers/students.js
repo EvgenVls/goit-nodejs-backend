@@ -1,39 +1,79 @@
-import { getAllStudents, getStudentById } from '../services/students.js';
+import createHttpError from 'http-errors';
+
+import {
+  getAllStudents,
+  getStudentById,
+  createStudent,
+  deleteStudent,
+  updateStudent,
+} from '../services/students.js';
 
 export const getAllStudentsController = async (req, res) => {
   const students = await getAllStudents();
 
   res.status(200).json({
+    status: 200,
+    message: 'Success found students',
     data: students,
   });
 };
 
 export const getStudentByIdController = async (req, res, next) => {
-  try {
-    const { studentId } = req.params;
-    const student = await getStudentById(studentId);
+  const { studentId } = req.params;
+  const student = await getStudentById(studentId);
 
-    // if (!student) {
-    //   return res.status(404).json({
-    //     message: 'Student not found',
-    //   });
-    // }
-
-    if (!student) {
-      next(new Error('Student not found'));
-      return;
-    }
-
-    res.status(200).json({
-      data: student,
-    });
-  } catch (error) {
-    if (error.message.includes('Cast to ObjectId failed')) {
-      error.status = 404;
-    }
-    const { status = 500 } = error;
-    res.status(status).json({
-      message: error.message,
-    });
+  if (!student) {
+    next(createHttpError(404, `Student with id ${studentId} not found`));
+    return;
   }
+
+  res.status(200).json({
+    status: 200,
+    message: `Student with id ${studentId} find success`,
+    data: student,
+  });
+};
+
+export const createStudentController = async (req, res) => {
+  const student = await createStudent(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created a student!',
+    data: student,
+  });
+};
+
+export const deleteStudentController = async (req, res, next) => {
+  const { studentId } = req.params;
+  const student = await deleteStudent(studentId);
+
+  if (!student) {
+    next(createHttpError(404, `Student with id ${studentId} not found`));
+    return;
+  }
+
+  res.status(204).json({
+    status: 204,
+    message: `Student with id ${studentId} deleted success!`,
+    data: student,
+  });
+};
+
+export const upsertStudentController = async (req, res, next) => {
+  const studentId = req.params;
+  const result = await updateStudent(studentId, req.body, { upsert: true });
+
+  if (!result) {
+    next(createHttpError(404, 'Student not found'));
+    return;
+  }
+
+  const status = result.isNew ? 201 : 200;
+
+  res.status(status).json({
+    status,
+    message: 'Successfully upserted a student!',
+    data: result.student,
+  });
 };

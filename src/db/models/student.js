@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+import { mongooseSaveError, setUpdateSettings } from './hooks.js';
+
 const studentsSchema = new Schema(
   {
     name: {
@@ -30,5 +32,11 @@ const studentsSchema = new Schema(
     versionKey: false,
   },
 );
+
+studentsSchema.post('save', mongooseSaveError);
+
+studentsSchema.pre('findOneAndUpdate', setUpdateSettings);
+
+studentsSchema.post('findOneAndUpdate', mongooseSaveError);
 
 export const StudentsCollection = model('students', studentsSchema);

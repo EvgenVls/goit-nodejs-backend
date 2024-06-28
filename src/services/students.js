@@ -25,7 +25,8 @@ export const updateStudent = async (studentId, payload, options = {}) => {
     { _id: studentId },
     payload,
     {
-      new: true,
+      // new: true,           -> перенесено в db/models/hooks.js {setUpdateSettings}
+      // runValidators: true, -> перенесено в db/models/hooks.js {setUpdateSettings}
       includeResultMetadata: true,
       ...options,
     },

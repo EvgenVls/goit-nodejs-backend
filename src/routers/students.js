@@ -8,7 +8,12 @@ import {
   patchStudentController,
 } from '../controllers/students.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import validateBody from '../utils/validateBody.js';
 import isValidId from '../middlewares/isValidId.js';
+import {
+  createStudentSchema,
+  updateStudentSchema,
+} from '../validation/students.js';
 
 const studentsRouter = Router();
 
@@ -20,7 +25,11 @@ studentsRouter.get(
   ctrlWrapper(getStudentByIdController),
 );
 
-studentsRouter.post('/', ctrlWrapper(createStudentController));
+studentsRouter.post(
+  '/',
+  validateBody(createStudentSchema),
+  ctrlWrapper(createStudentController),
+);
 
 studentsRouter.delete(
   '/:studentId',
@@ -31,12 +40,14 @@ studentsRouter.delete(
 studentsRouter.put(
   '/:studentId',
   isValidId,
+  validateBody(createStudentSchema),
   ctrlWrapper(upsertStudentController),
 );
 
 studentsRouter.patch(
   '/:studentId',
   isValidId,
+  validateBody(updateStudentSchema),
   ctrlWrapper(patchStudentController),
 );
 

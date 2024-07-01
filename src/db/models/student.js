@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 
+import { genderList } from '../../constants/students.js';
 import { mongooseSaveError, setUpdateSettings } from './hooks.js';
 
 const studentsSchema = new Schema(
@@ -15,7 +16,7 @@ const studentsSchema = new Schema(
     gender: {
       type: String,
       required: true,
-      enum: ['male', 'female', 'other'],
+      enum: genderList,
     },
     avgMark: {
       type: Number,

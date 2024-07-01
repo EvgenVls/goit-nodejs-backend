@@ -14,13 +14,13 @@ const port = Number(env('PORT', '3000'));
 const startServer = () => {
   const app = express();
 
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
+  // app.use(
+  //   pino({
+  //     transport: {
+  //       target: 'pino-pretty',
+  //     },
+  //   }),
+  // );
 
   app.use(cors());
   app.use(

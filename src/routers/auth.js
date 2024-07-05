@@ -8,7 +8,7 @@ import { createUserSchema } from '../validation/auth.js';
 const usersRouter = Router();
 
 usersRouter.post(
-  '/register',
+  '/signup',
   validateBody(createUserSchema),
   ctrlWrapper(registerUserController),
 );

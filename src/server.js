@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import { env } from './utils/env.js';
 
+import usersRouter from './routers/auth.js';
 import studentsRouter from './routers/students.js';
 
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -30,6 +31,7 @@ const startServer = () => {
     }),
   );
 
+  app.use('/auth', usersRouter);
   app.use('/students', studentsRouter);
 
   app.use('*', notFoundHandler);

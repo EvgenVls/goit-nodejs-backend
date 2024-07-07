@@ -1,9 +1,11 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import { env } from './utils/env.js';
 
+import usersRouter from './routers/auth.js';
 import studentsRouter from './routers/students.js';
 
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -23,6 +25,7 @@ const startServer = () => {
   );
 
   app.use(cors());
+  app.use(cookieParser());
   app.use(
     express.json({
       type: ['application/json', 'application/VideoEncoder.api+json'],
@@ -30,6 +33,7 @@ const startServer = () => {
     }),
   );
 
+  app.use('/auth', usersRouter);
   app.use('/students', studentsRouter);
 
   app.use('*', notFoundHandler);

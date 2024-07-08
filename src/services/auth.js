@@ -23,10 +23,13 @@ export const loginUser = async (payload) => {
   const user = await UsersCollection.findOne({
     email: payload.email,
   });
+
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
+
   const isEqual = await bcrypt.compare(payload.password, user.password);
+
   if (!isEqual) {
     throw createHttpError(401, 'Unauthorized');
   }
@@ -51,7 +54,7 @@ export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
 };
 
-export const createSession = () => {
+const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshenToken = randomBytes(30).toString('base64');
 
@@ -68,7 +71,7 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
     _id: sessionId,
     refreshToken,
   });
-
+  console.log(session);
   if (!session) {
     throw createHttpError(401, 'Session not found');
   }

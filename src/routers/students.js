@@ -9,6 +9,7 @@ import {
 } from '../controllers/students.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
+import authenticate from '../middlewares/authenticate.js';
 import isValidId from '../middlewares/isValidId.js';
 import {
   createStudentSchema,
@@ -16,6 +17,8 @@ import {
 } from '../validation/students.js';
 
 const studentsRouter = Router();
+
+studentsRouter.use(authenticate);
 
 studentsRouter.get('/', ctrlWrapper(getAllStudentsController));
 

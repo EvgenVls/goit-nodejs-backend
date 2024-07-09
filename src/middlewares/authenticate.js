@@ -4,7 +4,7 @@ import { SessionsCollection } from '../db/models/session.js';
 import { UsersCollection } from '../db/models/user.js';
 
 const authenticate = async (req, res, next) => {
-  const authHeader = req.get('Autherization');
+  const authHeader = req.get('Authorization');
 
   if (!authHeader) {
     next(401, 'Please provide Authorization header');
@@ -14,7 +14,7 @@ const authenticate = async (req, res, next) => {
   const bearer = authHeader.split(' ')[0];
   const token = authHeader.split(' ')[1];
 
-  if (bearer !== 'bearer' || !token) {
+  if (bearer !== 'Bearer' || !token) {
     next(createHttpError(401, 'Auth header should be of type Bearer'));
     return;
   }

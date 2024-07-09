@@ -18,6 +18,10 @@ const studentsSchema = new Schema(
       required: true,
       enum: genderList,
     },
+    parentId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
     avgMark: {
       type: Number,
       required: true,

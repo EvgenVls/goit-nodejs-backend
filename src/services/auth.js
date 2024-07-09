@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { randomBytes } from 'crypto';
+import { randomBytes } from 'node:crypto';
 import createHttpError from 'http-errors';
 
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
@@ -56,11 +56,11 @@ export const logoutUser = async (sessionId) => {
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
-  const refreshenToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
 
   return {
     accessToken,
-    refreshenToken,
+    refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   };
@@ -71,7 +71,7 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
     _id: sessionId,
     refreshToken,
   });
-  console.log(session);
+
   if (!session) {
     throw createHttpError(401, 'Session not found');
   }

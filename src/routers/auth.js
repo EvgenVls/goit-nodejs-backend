@@ -4,11 +4,16 @@ import {
   loginUserController,
   logoutUserController,
   refreshUserSessionController,
+  requestResetEmailController,
 } from '../controllers/auth.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
 // import isValidId from '../middlewares/isValidId.js';
-import { createUserSchema, loginUserSchema } from '../validation/auth.js';
+import {
+  createUserSchema,
+  loginUserSchema,
+  requestResetEmailSchema,
+} from '../validation/auth.js';
 
 const usersRouter = Router();
 
@@ -27,5 +32,11 @@ usersRouter.post(
 usersRouter.post('/logout', ctrlWrapper(logoutUserController));
 
 usersRouter.post('/refresh', ctrlWrapper(refreshUserSessionController));
+
+usersRouter.post(
+  '/request-reset-email',
+  validateBody(requestResetEmailSchema),
+  ctrlWrapper(requestResetEmailController),
+);
 
 export default usersRouter;

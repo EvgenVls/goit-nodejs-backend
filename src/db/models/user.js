@@ -4,6 +4,7 @@ import { emailRegexp } from '../../constants/users.js';
 import { ROLES } from '../../constants/index.js';
 
 import { mongooseSaveError, setUpdateSettings } from './hooks.js';
+import { required } from 'joi';
 
 const usersSchema = new Schema(
   {
@@ -15,6 +16,11 @@ const usersSchema = new Schema(
       type: String,
       unique: true,
       match: emailRegexp,
+      required: true,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
       required: true,
     },
     password: {

@@ -12,6 +12,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
 
 import authenticate from '../middlewares/authenticate.js';
+import upload from '../middlewares/upload.js';
 import isValidId from '../middlewares/isValidId.js';
 import { checkRoles } from '../middlewares/checkRoles.js';
 
@@ -41,6 +42,7 @@ studentsRouter.get(
 studentsRouter.post(
   '/',
   // checkRoles(ROLES.TEACHER),
+  upload.single('photo'),
   validateBody(createStudentSchema),
   ctrlWrapper(createStudentController),
 );
@@ -56,6 +58,7 @@ studentsRouter.put(
   '/:studentId',
   isValidId,
   // checkRoles(ROLES.TEACHER),
+  upload.single('photo'),
   validateBody(createStudentSchema),
   ctrlWrapper(upsertStudentController),
 );
@@ -64,6 +67,7 @@ studentsRouter.patch(
   '/:studentId',
   isValidId,
   // checkRoles(ROLES.TEACHER, ROLES.PARENT),
+  upload.single('photo'),
   validateBody(updateStudentSchema),
   ctrlWrapper(patchStudentController),
 );

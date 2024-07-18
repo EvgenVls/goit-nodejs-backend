@@ -9,12 +9,11 @@ import {
 } from '../services/students.js';
 
 import parsePaginationParams from '../utils/parsePaginationParams.js';
-
 import { parseSortParams } from '../utils/parseSortParams.js';
-
 import { parseFilterParams } from '../utils/parseFilterParams.js';
-
 import saveFileToUploadDir from '../utils/saveFileToUploadDir.js';
+import saveFileToCloudinary from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
 
 export const getAllStudentsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -105,7 +104,11 @@ export const patchStudentController = async (req, res, next) => {
   let photoUrl;
 
   if (photo) {
-    photoUrl = await saveFileToUploadDir(photo, 'students');
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo, 'goit_node');
+    } else {
+      photoUrl = await saveFileToUploadDir(photo, 'students');
+    }
   }
 
   const result = await updateStudent(studentId, {

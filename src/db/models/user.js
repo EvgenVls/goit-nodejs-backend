@@ -4,7 +4,6 @@ import { emailRegexp } from '../../constants/users.js';
 import { ROLES } from '../../constants/index.js';
 
 import { mongooseSaveError, setUpdateSettings } from './hooks.js';
-import { required } from 'joi';
 
 const usersSchema = new Schema(
   {

@@ -14,13 +14,13 @@ import validateBody from '../utils/validateBody.js';
 import authenticate from '../middlewares/authenticate.js';
 import upload from '../middlewares/upload.js';
 import isValidId from '../middlewares/isValidId.js';
-import { checkRoles } from '../middlewares/checkRoles.js';
+// import { checkRoles } from '../middlewares/checkRoles.js';
 
 import {
   createStudentSchema,
   updateStudentSchema,
 } from '../validation/students.js';
-import { ROLES } from '../constants/index.js';
+// import { ROLES } from '../constants/index.js';
 
 const studentsRouter = Router();
 
@@ -28,14 +28,14 @@ studentsRouter.use(authenticate);
 
 studentsRouter.get(
   '/',
-  checkRoles(ROLES.TEACHER),
+  // checkRoles(ROLES.TEACHER),
   ctrlWrapper(getAllStudentsController),
 );
 
 studentsRouter.get(
   '/:studentId',
   isValidId,
-  checkRoles(ROLES.PARENT, ROLES.TEACHER),
+  // checkRoles(ROLES.PARENT, ROLES.TEACHER),
   ctrlWrapper(getStudentByIdController),
 );
 

@@ -18,6 +18,7 @@ const studentsSchema = new Schema(
       required: true,
       enum: genderList,
     },
+    photo: { type: String },
     parentId: {
       type: Schema.Types.ObjectId,
       ref: 'users',

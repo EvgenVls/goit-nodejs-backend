@@ -14,6 +14,8 @@ import { parseSortParams } from '../utils/parseSortParams.js';
 
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
+import saveFileToUploadDir from '../utils/saveFileToUploadDir.js';
+
 export const getAllStudentsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -98,23 +100,18 @@ export const upsertStudentController = async (req, res, next) => {
 
 export const patchStudentController = async (req, res, next) => {
   const { studentId } = req.params;
-
   const photo = req.file;
 
-  /* в photo лежить обʼєкт файлу
-		{
-		  fieldname: 'photo',
-		  originalname: 'download.jpeg',
-		  encoding: '7bit',
-		  mimetype: 'image/jpeg',
-		  destination: '/Users/borysmeshkov/Projects/goit-study/students-app/temp',
-		  filename: '1710709919677_download.jpeg',
-		  path: '/Users/borysmeshkov/Projects/goit-study/students-app/temp/1710709919677_download.jpeg',
-		  size: 7
-	  }
-	*/
+  let photoUrl;
 
-  const result = await updateStudent(studentId, req.body);
+  if (photo) {
+    photoUrl = await saveFileToUploadDir(photo, 'students');
+  }
+
+  const result = await updateStudent(studentId, {
+    ...req.body,
+    photo: photoUrl,
+  });
 
   if (!result) {
     next(createHttpError(404, 'Student not found'));

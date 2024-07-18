@@ -11,6 +11,8 @@ import studentsRouter from './routers/students.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
+import { UPLOAD_DIR } from './constants/index.js';
+
 const port = Number(env('PORT', '3000'));
 
 const startServer = () => {
@@ -32,6 +34,7 @@ const startServer = () => {
       limit: '100kb',
     }),
   );
+  app.use(express.static(UPLOAD_DIR));
 
   app.use('/auth', usersRouter);
   app.use('/students', studentsRouter);

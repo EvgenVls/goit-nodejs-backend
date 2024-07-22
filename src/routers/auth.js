@@ -6,6 +6,7 @@ import {
   refreshUserSessionController,
   requestResetEmailController,
   resetPasswordController,
+  getGoogleOAuthUrlController,
 } from '../controllers/auth.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
@@ -30,6 +31,8 @@ usersRouter.post(
   validateBody(loginUserSchema),
   ctrlWrapper(loginUserController),
 );
+
+usersRouter.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
 
 usersRouter.post('/logout', ctrlWrapper(logoutUserController));
 

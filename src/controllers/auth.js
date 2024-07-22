@@ -7,6 +7,8 @@ import {
   resetPassword,
 } from '../services/auth.js';
 
+import { generateAuthUrl } from '../utils/googleAuth.js';
+
 import { ONE_DAY } from '../constants/index.js';
 
 export const registerUserController = async (req, res) => {
@@ -96,5 +98,15 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     message: 'Password was successfully reset!',
     data: {},
+  });
+};
+
+export const getGoogleOAuthUrlController = async (req, res) => {
+  const url = generateAuthUrl();
+
+  res.json({
+    status: 200,
+    message: 'Google OAuth url generate successfully',
+    data: { url },
   });
 };

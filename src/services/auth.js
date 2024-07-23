@@ -18,6 +18,11 @@ import { SessionsCollection } from '../db/models/session.js';
 
 import { env } from '../utils/env.js';
 import { sendEmail } from '../utils/sendMail.js';
+import {
+  validateCode,
+  getFullNameFromGoogleTokenPayload,
+} from '../utils/googleAuth.js';
+import { log } from 'node:console';
 
 // const app_domain = env(APP_DOMAIN);
 
@@ -71,7 +76,7 @@ export const loginUser = async (payload) => {
   });
 };
 
-export const findUser = (filter) => UsersCollection.findOne(filter);
+// export const findUser = (filter) => UsersCollection.findOne(filter);
 
 export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
@@ -88,6 +93,17 @@ const createSession = () => {
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   };
 };
+
+// export const createSession = () => {
+//   const accessToken = randomBytes(30).toString('base64');
+//   const refreshToken = randomBytes(30).toString('base64');
+//   return {
+//     accessToken,
+//     refreshToken,
+//     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+//     refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
+//   };
+// };
 
 export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   const session = await SessionsCollection.findOne({
@@ -177,5 +193,46 @@ export const resetPassword = async (payload) => {
   await UsersCollection.updateOne({
     _id: user._id,
     password: encryptedPassword,
+  });
+};
+
+export const loginOrSignupWithGoogle = async (code) => {
+  console.log(code);
+  const loginTicket = await validateCode(code);
+  console.log(loginTicket);
+  const payload = loginTicket.getPayload();
+
+  if (!payload) throw createHttpError(401);
+
+  let user = await UsersCollection.findOne({ email: payload.email });
+
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await UsersCollection.create({
+      email: payload.email,
+      name: getFullNameFromGoogleTokenPayload(payload),
+      password,
+      role: 'parent',
+    });
+  }
+
+  // const newSession = createSession();
+
+  // return await SessionsCollection.create({
+  //   userId: user._id,
+  //   ...newSession,
+  // });
+
+  await SessionsCollection.deleteOne({ userId: user._id });
+
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
+
+  return await SessionsCollection.create({
+    userId: user._id,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   });
 };

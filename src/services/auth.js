@@ -22,7 +22,6 @@ import {
   validateCode,
   getFullNameFromGoogleTokenPayload,
 } from '../utils/googleAuth.js';
-import { log } from 'node:console';
 
 // const app_domain = env(APP_DOMAIN);
 

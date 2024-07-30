@@ -34,3 +34,5 @@ export const UPLOAD_STUDENTS_DIR = path.join(
   'public',
   'students',
 );
+
+export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');
